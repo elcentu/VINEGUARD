@@ -10,7 +10,3 @@ __pycache__/
 # Archivos de configuración o secretos
 .env
 *.db
-
-# Modelos grandes y otros archivos grandes
-*.h5
-frames_data.json
