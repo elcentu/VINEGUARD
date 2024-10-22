@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa; /* Color de fondo claro */
+        }
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: auto;
+        }
+        .logo {
+            width: 90px; /* Ancho de la imagen */
+            height: 90px; /* Alto de la imagen */
+            display: block; /* Hace que el margen se aplique correctamente */
+            margin: 0 auto 20px; /* Centra la imagen y añade espacio en la parte inferior */
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container d-flex flex-column justify-content-center align-items-center vh-100">
+        <div class="form-container">
+            <img src="{{ url_for('static', filename='logoVG.png') }}" alt="Logo" class="logo">
+
+            <h2 class="text-center mb-4">Iniciar Sesión</h2>
+
+            <!-- Mostrar mensajes de error de Flask -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="container mt-4">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <form id="loginForm" action="/ingresar" method="POST" novalidate>
+                <div class="form-group">
+                    <label for="correo">Correo electrónico</label>
+                    <input type="email" class="form-control" id="correo" name="correo" required>
+                    <div class="error" id="emailError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="contraseña">Contraseña</label>
+                    <input type="password" class="form-control" id="contraseña" name="contraseña" required>
+                    <div class="error" id="passwordError"></div>
+                </div>
+                <button type="submit" class="btn mx-2" style="background-color: #9333ea; border-color: #9333ea; color: white; width: 100%;">Iniciar Sesión</button>
+            </form>
+            <p class="text-center mt-3">
+                ¿No tienes una cuenta? <a href="/registro" style="color: #9333ea;">Regístrate aquí</a>
+            </p>
+            
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            let isValid = true;
+
+            // Validar el campo de correo electrónico
+            const emailField = document.getElementById("correo");
+            const emailError = document.getElementById("emailError");
+            if (!emailField.value) {
+                emailError.textContent = "El correo electrónico es obligatorio.";
+                isValid = false;
+            } else if (!/\S+@\S+\.\S+/.test(emailField.value)) {
+                emailError.textContent = "Por favor, ingrese un correo electrónico válido.";
+                isValid = false;
+            } else {
+                emailError.textContent = "";
+            }
+
+            // Validar el campo de contraseña
+            const passwordField = document.getElementById("contraseña");
+            const passwordError = document.getElementById("passwordError");
+            if (!passwordField.value) {
+                passwordError.textContent = "La contraseña es obligatoria.";
+                isValid = false;
+            } else {
+                passwordError.textContent = "";
+            }
+
+            // Si no es válido, prevenir el envío del formulario
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

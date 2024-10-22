@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa; /* Color de fondo claro */
+        }
+        .form-container {
+            background-color: white;
+            padding: 60px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: auto;
+        }
+        .logo {
+            width: 90px; /* Ancho de la imagen */
+            height: 90px; /* Alto de la imagen */
+            display: block; /* Hace que el margen se aplique correctamente */
+            margin: 0 auto 20px; /* Centra la imagen y añade espacio en la parte inferior */
+        }
+        .text-danger {
+            display: none; /* Ocultar los mensajes de error por defecto */
+        }
+        .input-group-text {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container d-flex flex-column justify-content-center align-items-center vh-100">
+        <div class="form-container">
+            <img src="{{ url_for('static', filename='logoVG.png') }}" alt="Logo" class="logo">
+
+            <h2 class="text-center mb-4">Registro</h2>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="mb-3">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <form action="/registro" method="POST" onsubmit="return validarFormulario();">
+                <div class="form-group">
+                    <label for="nombre">Nombre completo</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="correo">Correo electrónico</label>
+                    <input type="email" class="form-control" id="correo" name="correo" required>
+                    <div class="text-danger" id="error-correo">Por favor, introduce un correo electrónico válido.</div>
+                </div>
+                <div class="form-group">
+                    <label for="contraseña">Contraseña</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="contraseña" name="contraseña" required>
+                        <div class="input-group-append">
+                            <span class="input-group-text" onclick="toggleContraseña('contraseña', 'icono-contraseña')">
+                                <i class="fa fa-eye" id="icono-contraseña"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="text-danger" id="error-contraseña-fuerte">La contraseña debe tener al menos 8 caracteres, incluir una letra mayúscula, una minúscula y un número.</div>
+                </div>
+                <div class="form-group">
+                    <label for="repetir-contraseña">Repetir contraseña</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="repetir-contraseña" name="repetir-contraseña" required>
+                        <div class="input-group-append">
+                            <span class="input-group-text" onclick="toggleContraseña('repetir-contraseña', 'icono-repetir-contraseña')">
+                                <i class="fa fa-eye" id="icono-repetir-contraseña"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="text-danger" id="error-contraseña-coinciden">Las contraseñas no coinciden.</div>
+                </div>
+                <button type="submit" class="btn btn-success btn-block" style="background-color: #9333ea; border-color: #9333ea; color: white;">Registrar</button>
+            </form>
+            <p class="text-center mt-3">
+                ¿Ya tienes una cuenta? <a href="/ingresar">Inicia sesión</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js"></script>
+    <script>
+        function toggleContraseña(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        function validarFormulario() {
+            const correo = document.getElementById('correo').value;
+            const contraseña = document.getElementById('contraseña').value;
+            const repetirContraseña = document.getElementById('repetir-contraseña').value;
+
+            const errorCorreo = document.getElementById('error-correo');
+            const errorContraseñaFuerte = document.getElementById('error-contraseña-fuerte');
+            const errorContraseñaCoinciden = document.getElementById('error-contraseña-coinciden');
+
+            let esValido = true;
+
+            // Validación del correo electrónico
+            const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!regexCorreo.test(correo)) {
+                errorCorreo.style.display = 'block';
+                esValido = false;
+            } else {
+                errorCorreo.style.display = 'none';
+            }
+
+            // Validación de la fortaleza de la contraseña
+            const regexContraseñaFuerte = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+            if (!regexContraseñaFuerte.test(contraseña)) {
+                errorContraseñaFuerte.style.display = 'block';
+                esValido = false;
+            } else {
+                errorContraseñaFuerte.style.display = 'none';
+            }
+
+            // Validación de que las contraseñas coinciden
+            if (contraseña !== repetirContraseña) {
+                errorContraseñaCoinciden.style.display = 'block';
+                esValido = false;
+            } else {
+                errorContraseñaCoinciden.style.display = 'none';
+            }
+
+            return esValido; // Retorna true si todo es válido, false si hay errores
+        }
+    </script>
+</body>
+</html>

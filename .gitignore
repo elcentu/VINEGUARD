@@ -1,0 +1,16 @@
+# Ignorar el entorno virtual de Python
+venv/
+__pycache__/
+
+# Archivos de caché y compilados de Python
+*.pyc
+*.pyo
+*.pyd
+
+# Archivos de configuración o secretos
+.env
+*.db
+
+# Modelos grandes y otros archivos grandes
+*.h5
+frames_data.json

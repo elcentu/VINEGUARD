@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Inicio</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa; /* Color de fondo claro */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .hero {
+            background: linear-gradient(to right, #cccccc, #d9e4ee);
+            color: white;
+            padding: 50px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .btn {
+            width: 200px; /* Ancho fijo para los botones */
+        }
+
+        .logo {
+            width: 150px; /* Tamaño ajustable del logo */
+            margin-bottom: 20px; /* Espacio debajo del logo */
+        }
+
+        footer {
+            background-color: #9333ea; /* Color morado */
+            color: white;
+            padding: 10px 20px;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container d-flex flex-column justify-content-center align-items-center vh-100">
+        <div class="hero">
+            <!-- Logo -->
+            <img src="{{ url_for('static', filename='logoVG.png') }}" alt="Logo" class="logo">
+            
+            <h1 class="mb-4" style="color: black;">¡Proteje tu cultivo!</h1>
+            <p class="mb-4" style="color: black;">Esta IA te ayudará a detectar el tipo de plaga que atacó el cultivo</p>
+            
+            <div>
+                <a href="/registro" class="btn mx-2" style="background-color: #9333ea; border-color: #9333ea; color: white;">Registrar</a>
+                <a href="/ingresar" class="btn mx-2" style="background-color: #9333ea; border-color: #9333ea; color: white;">Ingresar</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div>&copy; 2024 VineGuard IA. Todos los derechos reservados.</div>
+        <div>
+            <a href="/terminos">Términos</a>
+            <a href="/privacidad">Privacidad</a>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

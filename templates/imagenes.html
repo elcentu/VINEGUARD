@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Clasificación de Enfermedades en Uvas</title>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-left">
+            <img src="{{ url_for('static', filename='logoVG.png') }}" alt="Logo">
+            <h1>VineGuard AI</h1>
+        </div>
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+        <div class="menu" id="menu" style="display: none;">
+            <a href="/mis-consultas">Mis consultas</a>
+            <a href="/logout">Salir</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Sube una imagen o video para clasificarlo</h2>
+
+        <div class="upload-area">
+            <form id="uploadForm" method="POST" enctype="multipart/form-data">
+                <input type="file" name="media" accept="image/*,video/*" required onchange="submitForm()" id="mediaInput" style="display: none;">
+                <button type="button" class="upload-button" onclick="document.getElementById('mediaInput').click();">Subir Imagen o Video</button>
+            </form>            
+        </div>
+
+        <!-- Mostrar resultado si es una imagen -->
+        {% if media_type == 'image' %}
+        <div class="result">
+            <h2>Clase detectada: {{ class_name if class_name else "No se detectó ninguna clase" }}</h2>
+            <img src="{{ media_path }}" alt="Imagen Cargada">
+        </div>
+
+        <!-- Mostrar resultado si es un video -->
+        {% elif media_type == 'video' %}
+        <h2>Clase detectada: {{ first_detected_class if first_detected_class else "No se detectó ninguna clase" }}</h2>
+
+        <div class="frames-container">
+            <h3>Frames procesados</h3>
+            <div class="frames-list">
+                {% for frame in frames_result %}
+                    <div class="frame-item">
+                        <p>Frame: {{ frame.frame }}</p>
+                        <p>Clase: {{ frame.class_name }}</p>
+                        <img src="{{ url_for('static', filename='last_frame.png') }}" alt="Frame {{ frame.frame }}" style="max-width: 200px;"/>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Mostrar el último frame procesado -->
+        {% if last_frame_path %}
+            <h3>Último Frame del Video</h3>
+            <img src="{{ last_frame_path }}" alt="Último Frame" style="max-width: 100%; height: auto;"/>
+        {% else %}
+            <p>No se pudo obtener el último frame.</p>
+        {% endif %}
+        {% endif %}
+
+        {% if error_message %}
+            <div class="error">{{ error_message }}</div>
+        {% endif %}
+
+    </div>
+
+    <script>
+        function submitForm() {
+            document.getElementById('uploadForm').submit();
+        }
+
+        document.getElementById('mediaInput').addEventListener('change', function() {
+            const file = this.files[0];
+            if (file && file.size > 50 * 1024 * 1024) { // 50 MB máximo
+                alert("El archivo debe ser menor de 50 MB.");
+                this.value = "";
+            }
+        });
+
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+        }
+    </script>
+</body>
+</html>
